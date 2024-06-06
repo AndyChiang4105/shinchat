@@ -22,7 +22,7 @@ if not os.path.exists(app.config['PROCESSED_FOLDER']):
 
 last_output_filename = None
 
-def tts(filepath):
+def speach_to_text(filepath):
     model_size = "large-v2" # tiny, base, small, medium, large, large-v2, large-v3
     model = WhisperModel(model_size, device="cuda", compute_type="float16")
     audio_path =filepath # 替換成你的檔案名稱
@@ -51,7 +51,7 @@ def upload_file():
         file.save(recording_file_path)
 
         # 語音轉文字處理 (return 純文字)
-        user_input_text = tts(filepath = recording_file_path)
+        user_input_text = speach_to_text(filepath = recording_file_path)
         print(user_input_text)
 
         # 取得 gpt 回應 (return 純文字)
