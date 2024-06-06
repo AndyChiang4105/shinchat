@@ -7,6 +7,7 @@ import whisper
 import glob
 from chatGPT import getGptResponse
 from soVITS_api import getVitsResponse
+from faster_whisper import WhisperModel
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/recordings/'
@@ -21,11 +22,15 @@ if not os.path.exists(app.config['PROCESSED_FOLDER']):
 
 last_output_filename = None
 
-def speach_to_text(filepath):
-    model = whisper.load_model("medium")
-    audio = whisper.pad_or_trim(whisper.load_audio(filepath))
-    result = whisper.transcribe(model, audio, language='zh')
-    return result['text']
+def tts(filepath):
+    model_size = "large-v2" # tiny, base, small, medium, large, large-v2, large-v3
+    model = WhisperModel(model_size, device="cuda", compute_type="float16")
+    audio_path =filepath # 替換成你的檔案名稱
+    segments, _info = model.transcribe(audio_path, beam_size=5, initial_prompt="繁體")
+    transcription = ""
+    transcription_segments = [segment.text for segment in segments]
+    transcription = "，".join(transcription_segments)
+    return (transcription)
 
 @app.route('/')
 def index():
@@ -46,7 +51,7 @@ def upload_file():
         file.save(recording_file_path)
 
         # 語音轉文字處理 (return 純文字)
-        user_input_text = speach_to_text(filepath = recording_file_path)
+        user_input_text = tts(filepath = recording_file_path)
         print(user_input_text)
 
         # 取得 gpt 回應 (return 純文字)
