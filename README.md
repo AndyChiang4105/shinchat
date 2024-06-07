@@ -6,7 +6,7 @@
 ---
 1. 安裝[python 3.10.11](https://www.python.org/downloads/release/python-31011/)版本 
     - 使用虛擬環境的可以執行 `conda install python=3.10.11` 
-2. 控制台輸入 `nvidia-smi.exe` 查看CUDA版本
+2. 控制台輸入 `nvidia-smi` 查看CUDA版本
     - CUDA 版本必須 >= **12.1** ，小於的話去 nvidia experience 更新驅動
 3. 安裝 [CUDA Toolkit 12.1](https://developer.nvidia.com/cuda-12-1-0-download-archive?target_os=Windows&target_arch=x86_64&target_version=11&target_type=exe_local)，選擇對應的版本，Installer Type 要選 `exe(local)`
 4. 安裝pytorch，此指令對應到 CUDA Toolkit 12.1 版，其他版本沒試過建議不要亂改，舊版可以在[這裡](https://pytorch.org/get-started/previous-versions/)找到
