@@ -48,7 +48,7 @@ pip install -r requirements.txt
 7. 去這裡申請一組免費的 [OpenAI API key](https://github.com/chatanywhere/GPT_API_free)，並在「系統變數」中新增
     - 變數名 : OPENAI_API_KEY
     - 變數值 : 申請到的 API key
-8. 在 cmd 中輸入 `%OPENAI_API_KEY%` 確認有設定成功
+8. 在 cmd 中輸入 `echo %OPENAI_API_KEY%` 確認有設定成功
 
 ## 3.執行專案
 到這邊環境應該已經完全設定好了，接著即可執行檔案
