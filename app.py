@@ -53,8 +53,8 @@ def handle_tts_queue():
         unique = str(uuid.uuid4())
         output_file = os.path.join(app.config['PROCESSED_FOLDER'], f"output_{unique}.wav")
         text_to_speech(text, output_file)
-        socketio.emit('tts_text',{'text':text},room=sid)
-        socketio.emit('tts_done', {'file': output_file}, room=sid)
+        # 將文字與音檔傳回前端
+        socketio.emit('tts_done', {'file': output_file,'text': text}, room=sid)
 
 # 啟動一個新執行緒來處理TTS隊列
 tts_thread = Thread(target=handle_tts_queue)
