@@ -18,6 +18,8 @@
         const stopBtn = document.getElementById('stopBtn');
         const audioPlayer = document.getElementById('audioPlayer');
         const socket = io();
+        let audioQueue = [];
+        let isPlaying = false;
 
         startBtn.addEventListener('click', async () => {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -37,7 +39,16 @@
                 });
 
                 if (response.ok) {
-                    console.log('File successfully uploaded');
+                    const result = await response.json();
+                    if (result.status === 'upload_success' && sid) {
+                        await fetch('/start_tts', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ sid })
+                        });
+                    }
                 } else {
                     console.error('Error uploading file');
                 }
@@ -54,11 +65,28 @@
             audioChunks = [];
         });
 
-        socket.on('processing_done', data => {
-            const audioSrc = `/static/output/${data.filename}`;
-            audioPlayer.src = audioSrc;
-            audioPlayer.play();
+        socket.on('tts_done', data => {
+            audioQueue.push(data.file);
+            playNext();
         });
+
+        socket.on('sid', data => {
+            sid = data.sid;
+        });
+
+
+        function playNext() {
+            if (!isPlaying && audioQueue.length > 0) {
+                isPlaying = true;
+                const audioSrc = audioQueue.shift();
+                const audio = new Audio(audioSrc);
+                audio.play();
+                audio.onended = () => {
+                    isPlaying = false;
+                    playNext();
+                };
+            }
+        }
     </script>
 </body>
 </html>
