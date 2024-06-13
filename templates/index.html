@@ -67,13 +67,10 @@
             stopBtn.disabled = true;
             audioChunks = [];
         });
-        socket.on('tts_text',data => {
-            textQueue.push(data.text);
-            playNext();
-        });
 
         socket.on('tts_done', data => {
             audioQueue.push(data.file);
+            textQueue.push(data.text);
             playNext();
         });
 
