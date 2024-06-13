@@ -46,8 +46,9 @@ pip install -r requirements.txt
 5. 將 `.cpkt` 模型放到 `shinchat\GPT_weights` 資料夾下
 6. 將 `.pth` 模型放到 `shinchat\SoVITS_weights` 資料夾下
 7. 去這裡申請一組免費的 [OpenAI API key](https://github.com/chatanywhere/GPT_API_free)，並在「系統變數」中新增
-    - 變數名 : OPENAI_API_KEY
-    - 變數值 : 申請到的 API key
+```bash
+setx OPENAI_API_KEY <your-api-key>
+```
 8. 在 cmd 中輸入 `echo %OPENAI_API_KEY%` 確認有設定成功
 
 ## 3.執行專案
@@ -57,6 +58,22 @@ pip install -r requirements.txt
 2. 先使用指令 `python api.py` 開啟 api server
 3. 新增一個終端機來執行 `python app.py` 開啟網站  
 初次執行時要先下載 `faster_whisper` 的模型，因為是在本地執行
+
+# 使用LangSmith
+1. 下載套件
+```bash
+pip install -U langsmith
+```
+2. 到[這裡](https://smith.langchain.com/settings)申請 LangSmith 的 API key
+3. 在 cmd 輸入指令設定兩組環境變數
+```bash
+setx LANGCHAIN_TRACING_V2 true
+```
+```bash
+setx LANGCHAIN_API_KEY <your-api-key>
+```
+4. 在 [LangSmith](https://smith.langchain.com/) 中的 Projects 下即可看到每次使用 langchain 的詳細訊息
+5. 角色模板連結 : [shin_prompt](https://smith.langchain.com/hub/shinchat/shin_prompt)
 
 # 代辦事項
 - 前端
