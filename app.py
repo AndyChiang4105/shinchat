@@ -1,13 +1,12 @@
 import os
-import re
 import uuid
 import glob
 from flask import Flask, render_template, request, jsonify, session
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, disconnect, emit
 from werkzeug.utils import secure_filename
 from threading import Thread
 from queue import Queue
-from chatGPT import getGptResponse
+from RAG_ChatGPT import stream_sentences
 from soVITS_api import getVitsResponse
 from faster_whisper import WhisperModel
 
@@ -24,14 +23,6 @@ if not os.path.exists(app.config['PROCESSED_FOLDER']):
     os.makedirs(app.config['PROCESSED_FOLDER'])
 
 tts_queue = Queue()
-
-def split_sentences(text):
-    # 拆分句子
-    sentence_endings = re.compile(r'(?<=[。！？])')
-    sentences = sentence_endings.split(text)
-    # 去除多餘空格
-    sentences = [sentence.strip() for sentence in sentences if sentence.strip()]
-    return sentences
 
 def speach_to_text(filepath):
     model_size = "large-v2"  # tiny, base, small, medium, large, large-v2, large-v3
@@ -57,7 +48,7 @@ def handle_tts_queue():
         socketio.emit('tts_done', {'file': output_file,'text': text}, room=sid)
 
 # 啟動一個新執行緒來處理TTS隊列
-tts_thread = Thread(target=handle_tts_queue)
+tts_thread = Thread(target=handle_tts_queue,)
 tts_thread.daemon = True
 tts_thread.start()
 
@@ -81,15 +72,7 @@ def upload_file():
         user_input_text = speach_to_text(filepath=recording_file_path)
         print(user_input_text)
 
-        # 取得 gpt 回應 (return 純文字)
-        assistant_response = getGptResponse(user_input_text)
-        print(assistant_response)
-
-        # 拆分 gpt 回應成句子並加入TTS隊列
-        sentences = split_sentences(assistant_response)
-
-        # 暫存訊息，讓前端後續請求將 sid 傳遞過來
-        session['sentences'] = sentences
+        session['user_input_text'] = user_input_text
 
         return jsonify({'status': 'upload_success'})
 
@@ -98,17 +81,15 @@ def start_tts():
     data = request.json
     sid = data.get('sid')
 
-    if not sid or 'sentences' not in session:
+    if not sid or 'user_input_text' not in session:
         return jsonify({'error': 'Invalid request'}), 400
 
-    sentences = session.pop('sentences')
-
-    # sentences 是一個list，儲存拆分的句子
-    print(sentences)
+    user_input_text = session.get('user_input_text')
 
     # 每個句子依序進行 TTS 處理
-    for sentence in sentences:
+    for sentence in stream_sentences(user_input_text):
         if sentence:
+            print(sentence)
             tts_queue.put((sentence, sid))
 
     return jsonify({'status': 'tts_started'})
@@ -118,6 +99,7 @@ def test_connect():
     print('Client connected', request.sid)
     emit('sid', {'sid': request.sid})
 
+# 可能會有問題
 @socketio.on('disconnect')
 def test_disconnect():
     print('Client disconnected', request.sid)
