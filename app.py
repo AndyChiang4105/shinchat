@@ -3,7 +3,6 @@ from flask import Flask, render_template, request
 from flask_socketio import SocketIO
 from werkzeug.utils import secure_filename
 import uuid
-import whisper
 import glob
 from chatGPT import getGptResponse
 from soVITS_api import getVitsResponse
