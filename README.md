@@ -75,7 +75,8 @@ setx LANGCHAIN_API_KEY <your-api-key>
 4. 在 [LangSmith](https://smith.langchain.com/) 中的 Projects 下即可看到每次使用 langchain 的詳細訊息
 5. 角色模板連結 : [shin_prompt](https://smith.langchain.com/hub/shinchat/shin_prompt)
 
-#百度情感分析
+## 百度情感分析
+
 1.到[這裡](https://ai.baidu.com/tech/nlp_apply/sentiment_classify)申請接口的client_id，client_secret
 
 2.將得到的client_id，client_secret輸入到gettoken.py，獲得access_token
