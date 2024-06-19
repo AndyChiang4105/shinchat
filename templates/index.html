@@ -12,6 +12,7 @@
     <audio id="audioPlayer" controls></audio>
     <hr>
     <div id="text-display"> </div>
+    <div id="emotion-display"> </div>
 
     <script>
         let mediaRecorder;
@@ -21,7 +22,8 @@
         const audioPlayer = document.getElementById('audioPlayer');
         const socket = io();
         let audioQueue = [];
-        let textQueue=[];
+        let textQueue = [];
+        let emotionQueue = [];
         let isPlaying = false;
 
         startBtn.addEventListener('click', async () => {
@@ -71,6 +73,7 @@
         socket.on('tts_done', data => {
             audioQueue.push(data.file);
             textQueue.push(data.text);
+            emotionQueue.push(data.emotion)
             playNext();
         });
 
@@ -84,9 +87,11 @@
                 isPlaying = true;
                 const audioSrc = audioQueue.shift();
                 const nextText = textQueue.shift();
+                const nextEmotion = emotionQueue.shift();
                 const audio = new Audio(audioSrc);
                 audio.play();
                 document.getElementById('text-display').innerText=nextText;
+                document.getElementById('emotion-display').innerText=nextEmotion;
                 audio.onended = () => {
                     isPlaying = false;
                     playNext();
