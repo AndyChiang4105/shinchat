@@ -8,17 +8,17 @@ base_url = "https://api.chatanywhere.cn/v1"
 # 向量嵌入的模型
 embedding_model = OpenAIEmbeddings(base_url=base_url)
 # chatLLM
-llm = ChatOpenAI(model_name="gpt-3.5-turbo",base_url=base_url)
+llm = ChatOpenAI(model_name="gpt-4o-mini",base_url=base_url)
 
 # 連接本地向量資料庫
-chroma_db_path = "chroma_storage"
+chroma_db_path = "Three_Kingdoms_storage"
 vectorstore = Chroma(persist_directory=chroma_db_path, embedding_function=embedding_model)
 
 # 創建 RAG 檢索器
 retriever = vectorstore.as_retriever()
 
 # 包含RAG檢索內容的 prompt
-retrieval_qa_chat_prompt = hub.pull("shinchat/shin_prompt")
+retrieval_qa_chat_prompt = hub.pull("kongming_prompt")
 
 combine_docs_chain = create_stuff_documents_chain(
     llm, retrieval_qa_chat_prompt
