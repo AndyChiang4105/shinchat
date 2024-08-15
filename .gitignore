@@ -8,6 +8,8 @@ __pycache__/
 
 # chroma
 *.bin
+*.pickle
+*.sqlite3
 
 # Distribution / packaging
 .Python

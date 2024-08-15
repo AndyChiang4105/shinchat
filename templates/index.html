@@ -11,8 +11,8 @@
     <button id="stopBtn" disabled>Stop Recording</button>
     <audio id="audioPlayer" controls></audio>
     <hr>
+    <div id="user_input-display"> </div>
     <div id="text-display"> </div>
-    <div id="emotion-display"> </div>
 
     <script>
         let mediaRecorder;
@@ -23,6 +23,7 @@
         const socket = io();
         let audioQueue = [];
         let textQueue = [];
+        let userQueue = [];
         let isPlaying = false;
 
         startBtn.addEventListener('click', async () => {
@@ -67,6 +68,12 @@
             startBtn.disabled = false;
             stopBtn.disabled = true;
             audioChunks = [];
+        });
+
+        socket.on('user_input', data => {
+            userQueue.push(data.text);
+            const nextUserInput = userQueue.shift();
+            document.getElementById('user_input-display').innerText=nextUserInput;
         });
 
         socket.on('tts_done', data => {

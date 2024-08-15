@@ -71,6 +71,7 @@ def upload_file():
         # 語音轉文字處理 (return 純文字)
         user_input_text = speach_to_text(filepath=recording_file_path)
         print(user_input_text)
+        socketio.emit('user_input', {'text': user_input_text})
 
         session['user_input_text'] = user_input_text
 
