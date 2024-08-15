@@ -5,7 +5,7 @@ from langchain_openai import OpenAIEmbeddings
 
 # 存入資料庫
 
-file_path = 'baihuabeiqishu.txt'
+file_path = 'baihuasanguozhi.txt'
 loader = TextLoader(file_path, encoding='utf-8')
 documents = loader.load()
 
