@@ -1,17 +1,23 @@
-from RAG_ChatGPT import stream_sentences
-for sentence in stream_sentences("關公刮骨療毒是真的嗎?"):
-        if sentence:
-            print(sentence)
+# from RAG_ChatGPT import stream_sentences
 
-# from langchain_community.vectorstores import Chroma
-# from langchain_openai import OpenAIEmbeddings
+# for sentence in stream_sentences("你是誰"):
+#     if sentence:
+#         print(sentence)
 
-# base_url = "https://api.chatanywhere.cn/v1"
-# embedding_model = OpenAIEmbeddings(base_url=base_url)
-# chroma_db_path = "Three_Kingdoms_storage"
-# vectorstore = Chroma(persist_directory=chroma_db_path, embedding_function=embedding_model)
+# import random
 
-# q = '赤壁之戰'
 
-# docs = vectorstore.similarity_search(q)
-# print(len(docs))
+# def random_question():
+#     # 讀取考點文件
+#     with open('q_source.txt', 'r', encoding='utf-8') as file:
+#         points = file.readlines()
+
+#     # 隨機選擇一個考點
+#     return random.choice(points).strip()
+
+# print(type(random_question))
+# print(f"選擇的考點是：{selected_point}")
+from genQuestion import getQuestion
+
+while(1):
+    print(getQuestion())
