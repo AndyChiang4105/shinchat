@@ -38,9 +38,34 @@ rag_chain = create_retrieval_chain(retriever, combine_docs_chain)
 
 chain = rag_chain.pick("answer")
 
-def getQuestion():
-    res = chain.invoke({'input':random_question()})
-    # print(res)
+def generate_question():
+    try:
+        # 使用LLM生成問題
+        response = chain.invoke({'input':random_question()})  # 假設這個函數會返回一個問題的JSON字串
+        
+        # 解析JSON
+        data = json.loads(response)
 
-    question = json.loads(res)
-    return question
+        # 確保生成的JSON格式正確，包含所有必要的字段
+        required_fields = ["question", "options", "answer", "explanation"]
+        options_required_fields = ["option", "text"]
+        
+        # 檢查是否缺少主字段
+        for field in required_fields:
+            if field not in data:
+                raise ValueError(f"Missing required field: {field}")
+        
+        # 檢查選項格式
+        for option in data["options"]:
+            for field in options_required_fields:
+                if field not in option:
+                    raise ValueError(f"Missing required option field: {field}")
+    
+        return data
+    
+    except (json.JSONDecodeError, ValueError) as e:
+        print(f"Error: {e}")
+        print("重新生成問題")
+
+        return None
+
