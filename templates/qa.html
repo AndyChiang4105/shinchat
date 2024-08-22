@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>機智問答</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/qa_style.css') }}">
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="text-box" id="text-box">
+        這是顯示文字的區域。
+    </div>
+    
+    <div class="button-container">
+        <button class="button" id="button1" onclick="checkAnswer(0)">按鈕1</button>
+        <button class="button" id="button2" onclick="checkAnswer(1)">按鈕2</button>
+        <button class="button" id="button3" onclick="checkAnswer(2)">按鈕3</button>
+        <button class="button" id="button4" onclick="checkAnswer(3)">按鈕4</button>
+    </div>
+    
+    <!-- 弹窗 -->
+    <div class="dialog" id="dialog">
+        <p id="dialog-text">彈窗內容</p>
+        <button onclick="closeDialog()">確定</button>
+    </div>
+    
+    <script>
+        const data = {
+            question: '太史慈為何會選擇投靠劉備？',
+            options: [
+                { option: 'A', text: '因為他與劉備是故鄉朋友' },
+                { option: 'B', text: '因為他認為劉備有仁義之名，可以救助他人' },
+                { option: 'C', text: '因為他希望得到封賞和權力' },
+                { option: 'D', text: '因為他想要報仇' }
+            ],
+            answer: { option: 'B', text: '因為他認為劉備有仁義之名，可以救助他人' },
+            explanation: '太史慈選擇投靠劉備是因為他認為劉備有仁義之名，能夠救人於急難之中。他提到孔融在危急時刻極為慕仰劉備，並期望能依賴於他來解救自己。這顯示了他對劉備品德的信任和期望。'
+        };
+
+        // 設置問題和選項的文本
+        document.getElementById('text-box').innerText = data.question;
+        document.getElementById('button1').innerText = data.options[0].text;
+        document.getElementById('button2').innerText = data.options[1].text;
+        document.getElementById('button3').innerText = data.options[2].text;
+        document.getElementById('button4').innerText = data.options[3].text;
+
+        // 檢查答案是否正確
+        function checkAnswer(index) {
+            const selectedOption = data.options[index].text;
+            let message;
+
+            if (selectedOption === data.answer.text) {
+                message = "正確答案！";
+            } else {
+                message = "錯誤答案，" + data.explanation;
+            }
+
+            showDialog(message);
+        }
+
+        function showDialog(message) {
+            document.getElementById('dialog-text').innerText = message;
+            document.getElementById('dialog').style.display = 'block';
+        }
+
+        function closeDialog() {
+            document.getElementById('dialog').style.display = 'none';
+        }
+    </script>
+
+    <!-- 引入Three.js、OrbitControls和FBXLoader-->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.130.1/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.130.1/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.130.1/examples/js/loaders/FBXLoader.js"></script>
+    <script src="https://unpkg.com/fflate@0.7.4/umd/index.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
+

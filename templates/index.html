@@ -1,106 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Voice Recorder</title>
-    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask App with Sidebar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index_styles.css') }}">
 </head>
+
 <body>
-    <h1>Voice Recorder</h1>
-    <button id="startBtn">Start Recording</button>
-    <button id="stopBtn" disabled>Stop Recording</button>
-    <audio id="audioPlayer" controls></audio>
-    <hr>
-    <div id="user_input-display"> </div>
-    <div id="text-display"> </div>
 
-    <script>
-        let mediaRecorder;
-        let audioChunks = [];
-        const startBtn = document.getElementById('startBtn');
-        const stopBtn = document.getElementById('stopBtn');
-        const audioPlayer = document.getElementById('audioPlayer');
-        const socket = io();
-        let audioQueue = [];
-        let textQueue = [];
-        let userQueue = [];
-        let isPlaying = false;
+    <div class="sidebar">
+        <div class="button-container">
+            <button class="button" id="chat-mode-button" onclick="window.location.href='/chat'">聊天模式</button>
+            <button class="button" id="ai-question-button" onclick="window.location.href='/qa'">機智問答</button>
+        </div>
+    </div>
 
-        startBtn.addEventListener('click', async () => {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream);
-            mediaRecorder.ondataavailable = event => {
-                audioChunks.push(event.data);
-            };
-            mediaRecorder.onstop = async () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                const formData = new FormData();
-                const filename = 'recording.wav';  // 使用固定文件名
-                formData.append('file', audioBlob, filename);
-
-                const response = await fetch('/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (response.ok) {
-                    const result = await response.json();
-                    if (result.status === 'upload_success' && sid) {
-                        await fetch('/start_tts', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ sid })
-                        });
-                    }
-                } else {
-                    console.error('Error uploading file');
-                }
-            };
-            mediaRecorder.start();
-            startBtn.disabled = true;
-            stopBtn.disabled = false;
-        });
-
-        stopBtn.addEventListener('click', () => {
-            mediaRecorder.stop();
-            startBtn.disabled = false;
-            stopBtn.disabled = true;
-            audioChunks = [];
-        });
-
-        socket.on('user_input', data => {
-            userQueue.push(data.text);
-            const nextUserInput = userQueue.shift();
-            document.getElementById('user_input-display').innerText=nextUserInput;
-        });
-
-        socket.on('tts_done', data => {
-            audioQueue.push(data.file);
-            textQueue.push(data.text);
-            playNext();
-        });
-
-        socket.on('sid', data => {
-            sid = data.sid;
-        });
-
-
-        function playNext() {
-            if (!isPlaying && audioQueue.length > 0) {
-                isPlaying = true;
-                const audioSrc = audioQueue.shift();
-                const nextText = textQueue.shift();
-                const audio = new Audio(audioSrc);
-                audio.play();
-                document.getElementById('text-display').innerText=nextText;
-                audio.onended = () => {
-                    isPlaying = false;
-                    playNext();
-                };
-            }
-        }
-    </script>
+    <!-- 引入Three.js、OrbitControls和FBXLoader-->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.130.1/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.130.1/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.130.1/examples/js/loaders/FBXLoader.js"></script>
+    <script src="https://unpkg.com/fflate@0.7.4/umd/index.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
+
 </html>
