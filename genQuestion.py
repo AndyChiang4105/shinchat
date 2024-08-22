@@ -28,7 +28,7 @@ vectorstore = Chroma(persist_directory=chroma_db_path, embedding_function=embedd
 retriever = vectorstore.as_retriever()
 
 # 包含RAG檢索內容的 prompt
-retrieval_qa_chat_prompt = hub.pull("kongming_qa")
+retrieval_qa_chat_prompt = hub.pull("shinchat/kongming_qa")
 
 combine_docs_chain = create_stuff_documents_chain(
     llm, retrieval_qa_chat_prompt
