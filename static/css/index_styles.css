@@ -1,0 +1,87 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    display: flex;
+    overflow: hidden;
+    background-color: #f0f0f0;
+    background-image: url('/static/picture/house.gif');
+    background-size: cover; /* 使背景图片覆盖整个页面 */
+    background-position: center; /* 将背景图片置中 */
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8); /* 调整透明度 */
+    z-index: -1; /* 确保覆盖层在内容下方 */
+}
+
+.sidebar {
+    width: 250px; /* 左側面板寬度 */
+    background: rgba(255, 255, 255, 0.8); /* 半透明背景色 */
+    height: 100vh; /* 全屏高度 */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    position: fixed; /* 固定在左側 */
+    background-image: url('/static/picture/background.jpg'); /* 若需要背景圖片，則使用此屬性 */
+    background-size: cover;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.button {
+    width: 100%;
+    padding: 10px 0;
+    background-color: rgba(0, 0, 0, 0.7); /* 按鈕背景色 */
+    color: #fff; /* 按鈕文字顏色 */
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button:hover {
+    background-color: rgba(0, 0, 0, 0.9); /* 懸停時的背景色 */
+}
+
+.content {
+    margin-left: 250px; /* 左側面板的寬度 */
+    padding: 20px;
+    width: calc(100% - 250px); /* 減去左側面板的寬度 */
+    box-sizing: border-box;
+    height: 100vh;
+    overflow-y: auto;
+    background-color: #ffffff;
+    position: relative;
+}
+
+.content-section {
+    display: none;
+}
+
+.content-section.active {
+    display: block;
+}
+
+.dialog {
+    width: 400px; /* Increase this value to make the window wider */
+    height: 200px; /* Increase this value to make the window taller */
+    padding: 20px; /* Optional: adjust padding if needed */
+}

@@ -100,7 +100,6 @@ def test_connect():
     print('Client connected', request.sid)
     emit('sid', {'sid': request.sid})
 
-# 可能會有問題
 @socketio.on('disconnect')
 def test_disconnect():
     print('Client disconnected', request.sid)
@@ -110,6 +109,18 @@ def clear_folder(folder_path):
     files = glob.glob(os.path.join(folder_path, '*'))
     for f in files:
         os.remove(f)
+
+
+
+@app.route('/chat')
+def chat():
+    return render_template('chat.html')
+
+@app.route('/qa')
+def qa():
+    return render_template('qa.html')
+
+
 
 if __name__ == '__main__':
     # 執行程式前先將之前的結果清理掉
