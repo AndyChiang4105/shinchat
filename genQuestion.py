@@ -41,7 +41,7 @@ chain = rag_chain.pick("answer")
 def generate_question():
     try:
         # 使用LLM生成問題
-        response = chain.invoke({'input':random_question()})  # 假設這個函數會返回一個問題的JSON字串
+        response = chain.invoke({'input':random_question()}) 
         
         # 解析JSON
         data = json.loads(response)

@@ -144,6 +144,9 @@ def chat():
 def qa():
     return render_template('qa.html')
 
+@app.route('/result')
+def result():
+    return render_template('result.html')
 
 
 if __name__ == '__main__':
