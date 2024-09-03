@@ -115,4 +115,24 @@ body {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}/* 刷新按鈕 */
+#refreshButton {
+    position: fixed;
+    bottom: 150px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #FF5722;
+    color: white;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+#refreshButton:hover {
+    background-color: #E64A19;
 }

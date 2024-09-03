@@ -1,4 +1,5 @@
 import os
+import threading
 import uuid
 import glob
 from flask import Flask, render_template, request, jsonify, session
@@ -9,6 +10,7 @@ from queue import Queue
 from RAG_ChatGPT import stream_sentences
 from soVITS_api import getVitsResponse
 from faster_whisper import WhisperModel
+from genQuestion import generate_question
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = 'secret!'
@@ -95,6 +97,28 @@ def start_tts():
 
     return jsonify({'status': 'tts_started'})
 
+
+# 全局變量來存儲生成的題目
+questions_pool = []
+
+def generate_questions_async():
+    global questions_pool
+    while True:
+        if len(questions_pool) < 20:
+            for _ in range(20 - len(questions_pool)):
+                question = generate_question()
+                questions_pool.append(question)
+
+# 提供 API 來返回題目
+@app.route('/get_question', methods=['GET'])
+def get_question():
+    global questions_pool
+    if questions_pool:
+        return jsonify(questions_pool.pop(0))
+    else:
+        # 如果題目池空了，可以選擇動態生成或返回一個提示
+        return jsonify({"error": "No more pre-generated questions. Please try again later."}), 404
+
 @socketio.on('connect')
 def test_connect():
     print('Client connected', request.sid)
@@ -125,4 +149,6 @@ def qa():
 if __name__ == '__main__':
     # 執行程式前先將之前的結果清理掉
     clear_folder(app.config['PROCESSED_FOLDER'])
+    # 启动时异步生成题目
+    threading.Thread(target=generate_questions_async, daemon=True).start()
     socketio.run(app, debug=True)
