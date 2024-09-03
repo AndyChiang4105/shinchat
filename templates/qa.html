@@ -1,122 +1,141 @@
 <!DOCTYPE html>
 <html lang="zh">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>機智問答</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/qa_style.css') }}">
-</head>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/qa_style.css') }}"
+    />
+  </head>
 
-<body>
+  <body>
     <div class="overlay"></div>
-    <div class="text-box" id="text-box">
-        生成題目中...
-    </div>
+    <div class="text-box" id="text-box">生成題目中...</div>
 
     <div class="button-container">
-        <button class="button" id="button1" onclick="checkAnswer(0)">Button1</button>
-        <button class="button" id="button2" onclick="checkAnswer(1)">Button2</button>
-        <button class="button" id="button3" onclick="checkAnswer(2)">Button3</button>
-        <button class="button" id="button4" onclick="checkAnswer(3)">Button4</button>
+      <button class="button" id="button1" onclick="checkAnswer(0)">
+        Button1
+      </button>
+      <button class="button" id="button2" onclick="checkAnswer(1)">
+        Button2
+      </button>
+      <button class="button" id="button3" onclick="checkAnswer(2)">
+        Button3
+      </button>
+      <button class="button" id="button4" onclick="checkAnswer(3)">
+        Button4
+      </button>
     </div>
 
-    <button class="button" id="refreshButton" onclick="refreshData()">next</button>
+    <button class="button" id="refreshButton" onclick="refreshData()">
+      next
+    </button>
     <!-- 弹窗 -->
     <div class="dialog" id="dialog">
-        <p id="dialog-text">彈窗內容</p>
-        <button onclick="closeDialog()">確定</button>
+      <p id="dialog-text">彈窗內容</p>
+      <button onclick="closeDialog()">確定</button>
     </div>
 
     <script>
+      let globalData; // 全域變數
 
-        let globalData; // 全域變數
-
-        async function fetchData() {
-            try {
-                const res_question = await fetch('/get_question');
-                if (!res_question.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await res_question.json();
-                globalData = data; // 將題目存到全域變數
-                return data;
-            } catch (error) {
-                console.error('There was a problem with the fetch operation:', error);
-            }
+      async function fetchData() {
+        try {
+          const res_question = await fetch("/get_question");
+          if (!res_question.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const data = await res_question.json();
+          globalData = data; // 將題目存到全域變數
+          return data;
+        } catch (error) {
+          console.error("There was a problem with the fetch operation:", error);
         }
+      }
 
-        fetchData().then(data => {
-            if (data) {
-                // 設置問題和選項的文本
-                document.getElementById('text-box').innerText = data.question;
-                document.getElementById('button1').innerText = data.options[0].text;
-                document.getElementById('button2').innerText = data.options[1].text;
-                document.getElementById('button3').innerText = data.options[2].text;
-                document.getElementById('button4').innerText = data.options[3].text;
-            }
-        });
-
-        // 檢查答案是否正確
-        let answeredQuestions = 1
-        let wrong = 0
-        let correct = 0
-
-        function checkAnswer(index) {
-            if (globalData) {
-                const selectedOption = globalData.options[index].text;
-                let message;
-
-                if (selectedOption === data.answer.text) {
-                    message = "正確答案！";
-                    correct++;
-
-                } else {
-                    message = "錯誤答案，" + data.explanation;
-                    wrong++;
-                }
-                showDialog(message);
-                disableButtons();
-            }
+      fetchData().then((data) => {
+        if (data) {
+          // 設置問題和選項的文本
+          document.getElementById("text-box").innerText = data.question;
+          document.getElementById("button1").innerText = data.options[0].text;
+          document.getElementById("button2").innerText = data.options[1].text;
+          document.getElementById("button3").innerText = data.options[2].text;
+          document.getElementById("button4").innerText = data.options[3].text;
         }
-        function disableButtons() {
-            document.getElementById('button1').disabled = true;
-            document.getElementById('button2').disabled = true;
-            document.getElementById('button3').disabled = true;
-            document.getElementById('button4').disabled = true;
-        }
-        function enableButtons() {
-            document.getElementById('button1').disabled = false;
-            document.getElementById('button2').disabled = false;
-            document.getElementById('button3').disabled = false;
-            document.getElementById('button4').disabled = false;
-        }
-        function showDialog(message) {
-            document.getElementById('dialog-text').innerText = message;
-            document.getElementById('dialog').style.display = 'block';
-        }
+      });
 
-        function closeDialog() {
-            document.getElementById('dialog').style.display = 'none';
+      // 檢查答案是否正確
+      let answeredQuestions = 1;
+      let wrong = 0;
+      let correct = 0;
+
+      function checkAnswer(index) {
+        if (globalData) {
+          console.log("chekanswer");
+          const selectedOption = globalData.options[index].text;
+          let message;
+
+          if (selectedOption === globalData.answer.text) {
+            message = "正確答案！";
+            correct++;
+          } else {
+            message = "錯誤答案，" + globalData.explanation;
+            wrong++;
+          }
+          showDialog(message);
+          disableButtons();
         }
+      }
+      function disableButtons() {
+        document.getElementById("button1").disabled = true;
+        document.getElementById("button2").disabled = true;
+        document.getElementById("button3").disabled = true;
+        document.getElementById("button4").disabled = true;
+      }
+      function enableButtons() {
+        document.getElementById("button1").disabled = false;
+        document.getElementById("button2").disabled = false;
+        document.getElementById("button3").disabled = false;
+        document.getElementById("button4").disabled = false;
+      }
+      function showDialog(message) {
+        document.getElementById("dialog-text").innerText = message;
+        document.getElementById("dialog").style.display = "block";
+      }
 
-        function refreshData() {
-            fetchData().then(newData => {
-                enableButtons()
-                if (newData) {
-                    // 更新問題和選項
-                    document.getElementById('text-box').innerText = newData.question;
-                    document.getElementById('button1').innerText = newData.options[0].text;
-                    document.getElementById('button2').innerText = newData.options[1].text;
-                    document.getElementById('button3').innerText = newData.options[2].text;
-                    document.getElementById('button4').innerText = newData.options[3].text;
+      function closeDialog() {
+        document.getElementById("dialog").style.display = "none";
+      }
 
-                    // 更新 globalData
-                    globalData = newData;
-                }
-            });
+      function refreshData() {
+        enableButtons();
+        console.log(answeredQuestions);
+        if (answeredQuestions % 5 == 0) {
+          showDialog(`你答對了 ${correct} 題，答錯了 ${wrong} 題。`);
+          document.getElementById("refreshButton").innerText =
+            "play again" ;
+          return;
+        } else {
+          fetchData().then((newData) => {
+            // 更新問題和選項
+            document.getElementById("text-box").innerText = newData.question;
+            document.getElementById("button1").innerText =
+              newData.options[0].text;
+            document.getElementById("button2").innerText =
+              newData.options[1].text;
+            document.getElementById("button3").innerText =
+              newData.options[2].text;
+            document.getElementById("button4").innerText =
+              newData.options[3].text;
+
+            // 更新 globalData
+            globalData = newData;
+            answeredQuestions++;
+          });
         }
-
+      }
     </script>
 
     <!-- 引入Three.js、OrbitControls和FBXLoader-->
@@ -125,6 +144,5 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.130.1/examples/js/loaders/FBXLoader.js"></script>
     <script src="https://unpkg.com/fflate@0.7.4/umd/index.js"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
-
+  </body>
 </html>
