@@ -97,6 +97,26 @@ def start_tts():
 
     return jsonify({'status': 'tts_started'})
 
+@app.route('/text_backend', methods=['POST'])
+def text_backend():
+    data = request.get_json()
+    sid = data.get('sid')
+    session['user_input_text'] = data.get('message', '')
+
+    user_input_text = session.get('user_input_text')
+
+    # 每個句子依序進行 TTS 處理
+    for sentence in stream_sentences(user_input_text):
+        if sentence:
+            print(sentence)
+            tts_queue.put((sentence, sid))
+
+    
+    response = {
+        'status': 'success',
+        'message': 'Message received',
+    }
+    return jsonify(response)
 
 # 全局變量來存儲生成的題目
 questions_pool = []
@@ -133,7 +153,6 @@ def clear_folder(folder_path):
     files = glob.glob(os.path.join(folder_path, '*'))
     for f in files:
         os.remove(f)
-
 
 
 @app.route('/chat')
