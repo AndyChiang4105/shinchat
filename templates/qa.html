@@ -115,7 +115,7 @@
       enableButtons();
       console.log(answeredQuestions);
       if (answeredQuestions % 5 == 0) {
-        showDialog(`你答對了 ${correct} 題，答錯了 ${wrong} 題。`);
+        // showDialog(`你答對了 ${correct} 題，答錯了 ${wrong} 題。`);
         document.getElementById("refreshButton").innerText =
           "play again";
 
@@ -124,8 +124,7 @@
         localStorage.setItem('wrong', wrong);
 
         // 重定向到另一個頁面
-        window.location.href = 'result.html';  
-        return;
+        window.location.href = '/result';  
       } else {
         fetchData().then((newData) => {
           // 更新問題和選項

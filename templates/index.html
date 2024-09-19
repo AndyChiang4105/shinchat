@@ -9,7 +9,15 @@
 </head>
 
 <body>
+     <!-- 背景影片 -->
+     <div class="video-background">
+        <video autoplay muted loop id="background-video">
+            <source src="{{ url_for('static', filename='picture/home_background.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
 
+    <!-- 左側導航欄 -->
     <div class="sidebar">
         <div class="button-container">
             <button class="button" id="chat-mode-button" onclick="window.location.href='/chat'">聊天模式</button>
