@@ -33,7 +33,7 @@
   <button class="button" id="score" onclick="window.location.href='/result'">
     score
   </button>
-  
+
   <!-- 弹窗 -->
   <div class="dialog" id="dialog">
     <p id="dialog-text">彈窗內容</p>
@@ -81,9 +81,22 @@
 
         if (selectedOption === globalData.answer.text) {
           message = "正確答案！";
+
+          if (Math.random() < 0.7) {
+            loadModel(modelPaths[2]); // model3
+          } else {
+            loadModel(modelPaths[3]); // 隱藏動作
+
+          }
           correct++;
         } else {
           message = "錯誤答案，" + globalData.explanation;
+          if (Math.random() < 0.7) {
+            loadModel(modelPaths[4]); // model3
+          } else {
+            loadModel(modelPaths[5]); //隱藏動作
+
+          }
           wrong++;
         }
         showDialog(message);
@@ -124,7 +137,7 @@
         localStorage.setItem('wrong', wrong);
 
         // 重定向到另一個頁面
-        window.location.href = '/result';  
+        window.location.href = '/result';
       } else {
         fetchData().then((newData) => {
           // 更新問題和選項

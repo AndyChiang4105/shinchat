@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,12 +8,16 @@
     <link rel="stylesheet" href="static/css/chat.css">
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
 </head>
+
 <body>
     <div class="chat-container">
         <!-- Left Side: Character's Responses -->
         <div class="character-responses" id="character-responses">
-            <h2>Character Responses</h2>
-            <canvas id="model-canvas" width="1560" height="1030"></canvas> <!-- Added canvas element -->
+            <video autoplay muted loop id="background-video">
+                <source src="{{ url_for('static', filename='picture/chat_background.mov') }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <canvas id="model-canvas" width="1250" height="900"></canvas>
         </div>
 
         <!-- Right Side: Conversation History -->
@@ -31,6 +36,7 @@
                 <button id="start-voice-btn">Start Voice</button>
                 <button id="stop-voice-btn" disabled>Stop Voice</button>
                 <audio id="audioPlayer" controls></audio>
+                <div id="feedbackMessage"></div>
             </div>
 
             <!-- User and TTS display -->
@@ -39,14 +45,12 @@
         </div>
     </div>
 
-    <script src="static\js\chat.js"></script>
-
-
-    
+    <script src="static/js/chat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.130.1/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.130.1/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.130.1/examples/js/loaders/FBXLoader.js"></script>
     <script src="https://unpkg.com/fflate@0.7.4/umd/index.js"></script>
     <script src="{{ url_for('static', filename='js/script_test.js') }}"></script>
 </body>
+
 </html>

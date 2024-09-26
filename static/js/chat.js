@@ -6,6 +6,7 @@ const sendBtn = document.getElementById('send-btn');
 const startVoiceBtn = document.getElementById('start-voice-btn');
 const stopVoiceBtn = document.getElementById('stop-voice-btn');
 const audioPlayer = document.getElementById('audioPlayer');
+const feedbackMessage = document.getElementById('feedbackMessage');
 
 // Voice recording variables
 let mediaRecorder;
@@ -38,7 +39,7 @@ function appendMessage(content, messageType) {
 startVoiceBtn.addEventListener('click', async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     mediaRecorder = new MediaRecorder(stream);
-    
+
     mediaRecorder.ondataavailable = event => {
         audioChunks.push(event.data);
     };
@@ -82,12 +83,14 @@ stopVoiceBtn.addEventListener('click', () => {
     startVoiceBtn.disabled = false;
     stopVoiceBtn.disabled = true;
     audioChunks = [];
+    // 視覺回饋：顯示提示訊息
+    feedbackMessage.textContent = "錄音已停止";
 });
 
 // Socket events handling
 socket.on('user_input', data => {
     const transcribedText = data.text;
-    
+
     // Add the transcribed voice input as a user message in the chatroom
     sendMessage(transcribedText, true);
 });
@@ -98,7 +101,7 @@ socket.on('tts_done', data => {
 
     // Append the TTS text response as a character's message in the chatroom
     appendMessage(ttsText, 'character-message');
-    
+
     // Play the audio file
     audioQueue.push(ttsAudio);
     playNext();
@@ -108,17 +111,39 @@ socket.on('sid', data => {
     sid = data.sid;
 });
 
+let selectedModel = null
 // Play the TTS audio sequentially
 function playNext() {
     if (!isPlaying && audioQueue.length > 0) {
+        feedbackMessage.textContent = "";
+        // 在首次播放時隨機選擇 modelPaths[6] 或 modelPaths[7]
+        if (selectedModel === null) {
+            console.log('changemodel')
+            const randomNum = Math.random(); // 生成 0 到 1 之間的隨機數
+            if (randomNum < 0.5) {
+                selectedModel = modelPaths[7];
+                console.log(randomNum)
+            } else {
+                selectedModel = modelPaths[6];
+            }
+            loadModel(selectedModel); // 加載隨機選擇的模型
+        }
         isPlaying = true;
         const audioSrc = audioQueue.shift();
         const audio = new Audio(audioSrc);
         audio.play();
-        
+
         audio.onended = () => {
             isPlaying = false;
-            playNext();
+            // 當 audioQueue 清空，表示這次對話已結束
+            if (audioQueue.length === 0) {
+                // 切換回 modelPaths[0]
+                loadModel(modelPaths[0]);
+                selectedModel = null; // 重置模型選擇，以便下次對話重新選擇
+            } else {
+                // 繼續播放下一段對話
+                playNext();
+            }
         };
     }
 }
@@ -141,12 +166,12 @@ function text_backend(message) {
         },
         body: JSON.stringify({ message: message })
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
 }
 

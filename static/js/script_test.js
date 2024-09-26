@@ -27,7 +27,7 @@ controls.minDistance = 10; // Set minimum distance
 // Animation mixer and model variables
 let mixer;
 let currentModel;
-const modelPaths = ['/static/models/model.fbx', '/static/models/model2.fbx'];
+const modelPaths = ['/static/models/Idle.fbx', '/static/models/think.fbx','/static/models/clapping.fbx','/static/models/correct.fbx','/static/models/sad.fbx','/static/models/wrong.fbx','/static/models/talk1.fbx','/static/models/talk2.fbx'];
 let currentIndex = 0;
 
 // Load model function
@@ -56,15 +56,6 @@ function loadModel(path) {
 
 // Initial model load
 loadModel(modelPaths[currentIndex]);
-
-// Function to switch models
-function switchModel() {
-    currentIndex = (currentIndex + 1) % modelPaths.length; // Increment currentIndex and loop through modelPaths
-    loadModel(modelPaths[currentIndex]); // Load model based on currentIndex
-}
-
-// Switch models every 5 seconds
-setInterval(switchModel, 5000);
 
 // Animation loop
 const clock = new THREE.Clock();

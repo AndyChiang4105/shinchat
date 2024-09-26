@@ -20,6 +20,7 @@ body {
     height: 100vh;
     border: 1px solid #ccc;
     background-color: #fff;
+    overflow: hidden;
 }
 
 /* Left side: Character's responses */
@@ -27,19 +28,44 @@ body {
     flex: 2;
     padding: 20px;
     border-right: 1px solid #ccc;
-    overflow-y: auto;
+    position: relative;
+    overflow: hidden;
 }
 
-.character-responses h2 {
-    margin-bottom: 20px;
+.background-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1; /* 確保影片在後面 */
 }
+
+#model-canvas {
+    position: relative;
+    z-index: 1; /* 確保 canvas 在影片前面顯示 */
+    margin-top: 100px; /* 根據需要調整數值以改變位置 */
+}
+
+
+#background-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 影片覆蓋整個背景 */
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
 
 /* Right side: Conversation History */
 .conversation-history {
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding: 10px;
+    /* margin-left: 20px; */
     overflow-y: auto;
 }
 

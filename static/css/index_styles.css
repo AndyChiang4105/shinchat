@@ -7,6 +7,13 @@ body, html {
     display: flex;
 }
 
+#model-canvas {
+    position: absolute;
+    right: 0; /* 將畫布對齊到右側 */
+    top: 0; /* 從頂部開始 */
+    z-index: 1; /* 確保畫布在其他元素之上 */
+}
+
 /* 背景影片設置 */
 .video-background {
     position: fixed;
@@ -28,8 +35,8 @@ body, html {
 }
 
 .sidebar {
-    width: 250px; /* 左側面板寬度 */
-    background: rgba(255, 255, 255, 0.8); /* 半透明背景色 */
+    width: 300px; /* 左側面板寬度 */
+    background: rgba(255, 255, 255, 0.3); /* 半透明背景色 */
     height: 100vh; /* 全屏高度 */
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -37,8 +44,10 @@ body, html {
     align-items: center;
     padding-top: 20px;
     position: fixed; /* 固定在左側 */
-    background-image: url('/static/picture/background.jpg'); /* 若需要背景圖片，則使用此屬性 */
+    /* background-image: url('/static/picture/background.jpg'); 若需要背景圖片，則使用此屬性 */
     background-size: cover;
+    left : 300px;
+    z-index: 1;
 }
 
 .button-container {
