@@ -136,7 +136,7 @@ body {
 #refreshButton:hover {
     background-color: #E64A19;
 }
-#score {
+#home {
     position: fixed;
     bottom: 220px;
     right: 20px;
