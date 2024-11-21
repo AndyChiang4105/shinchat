@@ -65,8 +65,10 @@ body {
     display: flex;
     flex-direction: column;
     padding: 10px;
-    /* margin-left: 20px; */
     overflow-y: auto;
+    background: url('/static/picture/chatroom_background.jpg');
+    background-size: cover;
+    background-position: -65px center;
 }
 
 .conversation-history h2 {
