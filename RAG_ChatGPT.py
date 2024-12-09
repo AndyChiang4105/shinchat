@@ -4,11 +4,16 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains import create_retrieval_chain
 from langchain import hub
 
-base_url = "https://api.chatanywhere.cn/v1"
-# 向量嵌入的模型
-embedding_model = OpenAIEmbeddings(base_url=base_url)
+# base_url = "https://api.chatanywhere.cn/v1"
+# # 向量嵌入的模型
+# embedding_model = OpenAIEmbeddings(base_url=base_url)
+# # chatLLM
+# llm = ChatOpenAI(model_name="gpt-4o-mini",base_url=base_url)
+
+# unlimit api
+embedding_model = OpenAIEmbeddings()
 # chatLLM
-llm = ChatOpenAI(model_name="gpt-4o-mini",base_url=base_url)
+llm = ChatOpenAI(model_name="gpt-4o-mini")
 
 # 連接本地向量資料庫
 chroma_db_path = "Three_Kingdoms_storage"
